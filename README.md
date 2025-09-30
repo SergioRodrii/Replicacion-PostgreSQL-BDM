@@ -19,7 +19,7 @@ Este proyecto implementa replicación en tiempo real de PostgreSQL utilizando co
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/postgres-replicacion-docker.git
+   git clone https://github.com/SergioRodrii/Replicacion-PostgreSQL-BDM
    
 2. Accede al directorio del proyecto:
    ```bash
