@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres_primary:
+    image: postgres:15-alpine
+    container_name: postgres_primary
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: saber11
+    ports:
+      - "5432:5432"
+    volumes:
+      - primary_data:/var/lib/postgresql/data
+      - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./init-replication.sql:/docker-entrypoint-initdb.d/00_init_replication.sql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+
+  postgres_replica:
+    image: postgres:15-alpine
+    container_name: postgres_replica
+    depends_on:
+      - postgres_primary
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5433:5432"
+    volumes:
+      - replica_data:/var/lib/postgresql/data
+    command: >
+      bash -c "export PGPASSWORD=replicator_password &&
+      until pg_basebackup -h postgres_primary -D /var/lib/postgresql/data \
+      -U replicator -vP --wal-method=stream --slot=replica_slot --write-recovery-conf; \
+      do echo 'Esperando al primario...'; sleep 2; done && \
+      echo 'Corrigiendo permisos...' && \
+      chown -R postgres:postgres /var/lib/postgresql/data && \
+      chmod 700 /var/lib/postgresql/data && \
+      echo 'Base de datos clonada. Iniciando en modo hot_standby...' && \
+      exec gosu postgres postgres"
+
+volumes:
+  primary_data:
+  replica_data:
