@@ -16,6 +16,7 @@ services:
       - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./init-replication.sql:/docker-entrypoint-initdb.d/00_init_replication.sql
       - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./procedure.sql:/docker-entrypoint-initdb.d/02_procedure.sql
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 
   postgres_replica:
