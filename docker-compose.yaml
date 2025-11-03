@@ -42,6 +42,21 @@ services:
       echo 'Base de datos clonada. Iniciando en modo hot_standby...' && \
       exec gosu postgres postgres"
 
+  etl:
+    build: ./app
+    container_name: etl_saber11
+    depends_on:
+      - postgres_primary
+    environment:
+      DB_HOST: postgres_primary
+      DB_PORT: 5432
+      DB_NAME: saber11
+      DB_USER: postgres
+      DB_PASS: postgrespassword
+    volumes:
+      - ./app:/app
+    command: ["sh", "-c", "sleep 10 && python etl.py"]
+
 volumes:
   primary_data:
   replica_data:
