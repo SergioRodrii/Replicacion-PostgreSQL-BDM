@@ -108,7 +108,7 @@ def transform_to_json(chunk: pd.DataFrame):
 
         data["Ubicacion_Residencia"].append({
             "ESTU_CONSECUTIVO": parse_varchar(row.get("ESTU_CONSECUTIVO")),
-            "COD_MCPIO": parse_bigint(row.get("COD_MCPIO")),
+            "COD_MCPIO": parse_bigint(row.get("ESTU_COD_RESIDE_MCPIO")),          
             "ESTU_PAIS_RESIDE": parse_varchar(row.get("ESTU_PAIS_RESIDE"))
         })
 
