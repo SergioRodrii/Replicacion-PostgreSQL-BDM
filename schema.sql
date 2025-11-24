@@ -168,7 +168,7 @@ CREATE TABLE ubicacion_residencia_default
 
 /*
 ======================================================================
-PARTICIONAMIENTO DE LA TABLA 
+PARTICIONAMIENTO DE LA TABLA RESULTADOS
 ======================================================================
 */
 
